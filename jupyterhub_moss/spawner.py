@@ -138,7 +138,7 @@ class MOSlurmSpawner(SlurmSpawner):
                 continue
 
             # unique reference from cluster and partition names
-            if cluster != 'N/A':
+            if cluster != "N/A":
                 partition = f"{cluster}.{partition}"
 
             # core count - allocated/idle/other/total
@@ -167,7 +167,7 @@ class MOSlurmSpawner(SlurmSpawner):
                 # Slurm does not report usage of oversubscribed resources
                 # sinfo shows partition as full once each core has a single job running on them
                 # even though more jobs will be allowed according to the oversubscription factor
-                _, oversub_factor= oversubscribe.split(":", 1)
+                _, oversub_factor = oversubscribe.split(":", 1)
                 ncores_total *= int(oversub_factor)
                 ncores_idle = ncores_total
                 shared = True
@@ -213,8 +213,12 @@ class MOSlurmSpawner(SlurmSpawner):
 
             if partition in partitions_info:
                 # update display counters of existing partition
-                slots_counters = zip(partitions_info[partition]["job_slots"], resources["job_slots"])
-                partitions_info[partition]["job_slots"] = [old + new for old, new in slots_counters]
+                slots_counters = zip(
+                    partitions_info[partition]["job_slots"], resources["job_slots"]
+                )
+                partitions_info[partition]["job_slots"] = [
+                    old + new for old, new in slots_counters
+                ]
             else:
                 # add new partition
                 partitions_info[partition] = resources
@@ -278,7 +282,9 @@ class MOSlurmSpawner(SlurmSpawner):
                     format_template(self.slurm_info_cmd, **subvars),
                 )
             )
-            self.log.debug("Slurm info command for partition ID '%s': %s", partition_id, sinfo_cmd)
+            self.log.debug(
+                "Slurm info command for partition ID '%s': %s", partition_id, sinfo_cmd
+            )
             partition_sinfo_out = await self.run_command(sinfo_cmd)
             # self.log.debug("Slurm info command output: %s", partition_sinfo_out)
 
